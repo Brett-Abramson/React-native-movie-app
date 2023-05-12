@@ -2,23 +2,28 @@ import {Text, View} from "react-native"
 import Banner from "../components/Banner"
 import SearchField from "../components/SearchField"
 import { useState } from "react"
+import Results from "../components/Results"
 
-const apiUrl = "http://www.omdapi.com?apikey=2c0bcb9f&"
+const apiUrl = "http://www.omdbapi.com/?apikey=2c0bcb9f&"
 
 
 const LandingScreen = () => {
     const [movieResult, setMovieResult] = useState()
 
     const handleSearch = async (searchString) => {
-        const result = await fetch(apiUrl+searchString)
-        console.log(result)
+        const result = await fetch(`http://www.omdbapi.com/?t=${searchString}&apikey=2c0bcb9f`).then((data) => data.json())
+        // console.log(result)
+        setMovieResult(result)
     }
 
 
     return (
         <View style={{flex: 1}}>
             <Banner />
-            <SearchField />
+            <SearchField onSubmit={handleSearch}/>
+            {movieResult?.Title && 
+                <Results movie={movieResult} />
+            }
         </View>
     )
 }
